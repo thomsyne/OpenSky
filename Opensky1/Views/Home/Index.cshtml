@@ -1,0 +1,312 @@
+﻿@model IEnumerable<Opensky1.Models.Home>
+
+@{
+    ViewBag.Title = "Airports";
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary list-panel" id="list-panel">
+            <div class="panel-heading list-panel-heading">
+                <h1 class="panel-title list-panel-title"></h1>
+                <br />
+                <br />
+            </div>
+            <div class="panel-body">
+                <div id="studDiv">
+                    <table id="assets-data-table" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>City</th>
+                                <th>Airport</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>Atlanta, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KATL')" data-airport-id="KATL" data-toggle="modal" data-target="#exampleModal">Hartsfield-Jackson Atlanta International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Chicago, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KORD')" data-airport-id="KORD" data-toggle="modal" data-target="#exampleModal">O'Hare International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Los Angeles, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KLAX')" data-airport-id="KLAX" data-toggle="modal" data-target="#exampleModal">Los Angeles International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Texas United States</td>
+                                <td><a href="#" onclick="onClickEvent('KDFW')" data-airport-id="KDFW" data-toggle="modal" data-target="#exampleModal">Dallas/Fort Worth International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Beijing, China</td>
+                                <td><a href="#" onclick="onClickEvent('ZBAA')" data-airport-id="ZBAA" data-toggle="modal" data-target="#exampleModal">Beijing Capital International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Denver, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KDEN')" data-airport-id="KDEN" data-toggle="modal" data-target="#exampleModal">Denver International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Charlotte, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KCLT')" data-airport-id="KCLT" data-toggle="modal" data-target="#exampleModal">Charlotte Douglas International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Nevada, United States</td>
+                                <td><a href="#" onclick="onClickEvent('KLAS')" data-airport-id="KLAS" data-toggle="modal" data-target="#exampleModal">McCarran International Airport</a></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>North Holland, Netherlands</td>
+                                <td><a href="#" onclick="onClickEvent('EHAM')" data-airport-id="EHAM" data-toggle="modal" data-target="#exampleModal">Amsterdam Airport Schiphol</a></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Shanghai, China</td>
+                                <td><a href="#" onclick="onClickEvent('ZSPD')" data-airport-id="ZSPD" data-toggle="modal" data-target="#exampleModal">Shanghai Pudong International Airport</a></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bootstrap Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Airport Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <p>Begin Time:</p><input type="time" id="begin" style="border-radius:2px;">
+                                <p>End Time:</p><input type="time" id="end">
+                                <button type="submit" title="submit" onclick="onChangeEvent()">Submit</button>
+                            </div>
+
+                            <hr>
+                            <div class="kontent">
+                                <p><strong>Arriving Flight Details</strong></p>
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <th>Departure Time</th>
+                                        <th>Arrival Time</th>
+                                        <th>Departing Airport</th>
+                                        <th>Arriving Airport</th>
+                                    </tr>
+                                    <tbody id="tbody"></tbody>
+
+                                </table>
+
+                                <p><strong>Departing Flight Details</strong></p>
+
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <th>Departure Time</th>
+                                        <th>Arrival Time</th>
+                                        <th>Departing Airport</th>
+                                        <th>Arriving Airport</th>
+                                    </tr>
+                                    <tbody id="dbody"></tbody>
+
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function toTimestamp(year, month, day, hour, minute, second) {
+        var datum = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+        return datum.getTime() / 1000;
+    }
+
+    const airportNames = [
+        { name: 'Hartsfield-Jackson Atlanta International Airport', id: 'KATL' },
+        { name: "O'Hare International Airport", id: 'KORD' },
+        { name: 'Los Angeles International Airport', id: 'KLAX' },
+        { name: 'Dallas/Fort Worth International Airport', id: 'KDFW' },
+        { name: 'Beijing Capital International Airport', id: 'ZBAA' },
+        { name: 'Denver International Airport', id: 'KDEN' },
+        { name: 'Charlotte Douglas International Airport', id: 'KCLT' },
+        { name: 'McCarran International Airport', id: 'KLAS' },
+        { name: 'Amsterdam Airport Schiphol', id: 'EHAM' },
+        { name: 'Shanghai Pudong International Airport', id: 'ZSPD' },
+        { name: 'Charles de Gaulle Airport', id: 'LFPG' },
+        { name: 'London Heathrow Airport', id: 'EGLL' },
+        { name: 'Tokyo Haneda Airport', id: 'RJTT' },
+        { name: 'Dubai International Airport', id: 'OMDB' },
+        { name: 'Hong Kong International Airport', id: 'VHHH' },
+        { name: 'Paris-Charles de Gaulle Airport', id: 'LFPG' },
+        { name: 'Guangzhou Baiyun International Airport', id: 'ZGGG' },
+        { name: 'Frankfurt Airport', id: 'EDDF' },
+        { name: 'Denver International Airport', id: 'KDEN' },
+        { name: 'John F. Kennedy International Airport', id: 'KJFK' },
+        { name: 'San Francisco International Airport', id: 'KSFO' },
+        { name: 'Amsterdam Airport Schiphol', id: 'EHAM' },
+        { name: 'Daytona Beach International Airport', id: 'KDAB' },
+    ]
+
+    function changeAirportCodeToName(code) {
+        if (!code) return 'N/A';
+        for(i of airportNames) {
+            if (code == i.id) {
+                return i.name
+            }
+        }
+    }
+
+        function onChangeEvent() {
+            airport_code = $('#airport-id').val();
+
+            d = new Date()
+            year = d.getFullYear()
+            month = d.getMonth();
+            day = d.getDay();
+
+            bbg = ($('#begin').val()).split(':');
+            bend = ($('#end').val()).split(':');
+
+
+
+            bbg_i = (toTimestamp(year, month, day, bbg[0], bbg[1], 0));
+            bend_i = (toTimestamp(year, month, day, bend[0], bend[1], 0));
+            console.log(bbg_i, bend_i)
+
+            begin = "1517227200";
+            end = "1517230800";
+            type = "arrival"
+
+            function EpochToDate(epoch) {
+                if (epoch < 10000000000)
+                    epoch *= 1000; // convert to milliseconds (Epoch is usually expressed in seconds, but Javascript uses Milliseconds)
+                var epoch = epoch + (new Date().getTimezoneOffset() * -1); //for timeZone
+                return new Date(epoch);
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetInfo", "Home")',
+                data: { airport: airport_code, begin: bbg_i, end: bend_i },
+                success: function (result) {
+                    // printing result to console to know the objects API is returning
+                    console.log(result);
+                    result = JSON.parse(result);
+                    a = JSON.parse(result.arrivalResponse);
+                    d = JSON.parse(result.departureResponse);
+                    console.log(result);
+                    var rows = "";
+
+                    for (item of a) {
+                        console.log(item.firstSeen);
+                    console.log(item['firstseen']);
+                    //console.log(item[1]);
+                        rows += `<tr><td>${EpochToDate(item.firstSeen)}</td><td>${EpochToDate(item.lastSeen)}</td><td>${changeAirportCodeToName(item.estDepartureAirport)}</td><td>${changeAirportCodeToName(item.estArrivalAirport)}</td><tr>`;
+                    }
+                    //var __html = "<tr><td>"+
+                    $('#tbody').html(rows);
+
+                    var _rows = "";
+                    for (_item of d) {
+                        _rows += `<tr><td>${EpochToDate(_item.firstSeen)}</td><td>${EpochToDate(_item.lastSeen)}</td><td>${changeAirportCodeToName(_item.estDepartureAirport)}</td><td>${changeAirportCodeToName(_item.estArrivalAirport)}</td><tr>`;
+                    }
+                    $('#dbody').html(_rows);
+                }
+            })
+        }
+
+        function onClickEvent(airport_code) {
+            $('#tbody').html('');
+            $('#dbody').html('');
+            $('#airport-id').val(airport_code)
+        }
+    
+</script>
+
+@section Scripts
+{
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    @*<script>
+                $(document).ready(function () {
+                    $("#studDiv a").click(function (e) {
+
+                        $.ajax({
+                            url: '@Url.Action("GetHomeData")',
+                            type: 'post',
+                            dataType: 'json',
+                            data: '{"id":"' + $(this).attr("data-id") + '"}',
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                $("#stuId").text(data["id"]);
+                                $("#stuName").text(data["minute"]);
+                                $("#stuAge").text(data["departing"]);
+                                $("#stuStandard").text(data["arriving"]);
+                                $("#stuCity").text(data["City"]);
+                                $("#myModal").modal("show");
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+                            }
+                         });
+                    });
+                });
+        </script>*@
+
+    <script type="text/javascript">
+
+     $(document).ready(function () {
+
+         $('#assets-data-table').DataTable();
+     });
+    </script>
+
+}
+
+
+
+
+
+
+
+<!--   Core JS Files   -->
+@*<script src="../assets/js/core/jquery.min.js"></script>
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="../assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <!-- Chart JS -->
+    <script src="../assets/js/plugins/chartjs.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="../assets/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/paper-dashboard.min.js?v=2.0.0" type="text/javascript"></script>
+    <!-- Paper Dashboard DEMO methods, don't include it in your project! -->
+    <script src="../assets/demo/demo.js"></script>*@
+
+<input type="hidden" value="0" id="airport-id" name="airport-name" />
